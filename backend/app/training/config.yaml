@@ -1,2 +1,20 @@
-# Placeholder configuration parameters for DefectLens AI
-placeholder_key: placeholder_value
+# DefectLens AI Training Configurations
+dataset:
+  name: "mvtec"
+  category: "bottle"
+  dataset_path: "./data/mvtec"
+  image_size: 256
+  batch_size: 32
+  val_split: 0.10
+  horizontal_flip: true
+
+model:
+  backbone: "resnet18"
+
+training:
+  epochs: 100
+  learning_rate: 0.0004
+  seed: 42
+  deterministic: true
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
