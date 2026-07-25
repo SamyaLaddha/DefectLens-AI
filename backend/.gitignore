@@ -1,0 +1,9 @@
+# Ignore checkpoints and logs contents but keep directories
+checkpoints/*
+!checkpoints/.gitkeep
+logs/*
+!logs/.gitkeep
+
+__pycache__/
+*.pyc
+.env
