@@ -43,6 +43,7 @@ class Settings:
         self.BATCH_SIZE: int = int(dataset_cfg.get("batch_size", 32))
         self.VAL_SPLIT: float = float(dataset_cfg.get("val_split", 0.10))
         self.HORIZONTAL_FLIP: bool = bool(dataset_cfg.get("horizontal_flip", True))
+        self.NUM_WORKERS: int = int(dataset_cfg.get("num_workers", 0))
 
         # Model configs
         self.BACKBONE: str = model_cfg.get("backbone", "resnet18")
@@ -52,6 +53,9 @@ class Settings:
         self.LEARNING_RATE: float = float(train_cfg.get("learning_rate", 0.0004))
         self.SEED: int = int(train_cfg.get("seed", 42))
         self.DETERMINISTIC: bool = bool(train_cfg.get("deterministic", True))
+        self.PATIENCE: int = int(train_cfg.get("patience", 10))
+        self.DEVICE: str = train_cfg.get("device", "auto")
+        self.RUN_NAME: str = train_cfg.get("run_name", "run_1")
 
         # Paths
         self.CHECKPOINT_DIR: str = train_cfg.get("checkpoint_dir", "./checkpoints")

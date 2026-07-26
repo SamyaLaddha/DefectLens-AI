@@ -54,3 +54,6 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Dataset/Local data storage
+/data/
