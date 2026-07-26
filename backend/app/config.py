@@ -30,6 +30,7 @@ class Settings:
         dataset_cfg = config.get("dataset", {})
         model_cfg = config.get("model", {})
         train_cfg = config.get("training", {})
+        eval_cfg = config.get("evaluation", {})
 
         # Server configs
         self.PORT: int = int(os.getenv("PORT", "8000"))
@@ -60,5 +61,9 @@ class Settings:
         # Paths
         self.CHECKPOINT_DIR: str = train_cfg.get("checkpoint_dir", "./checkpoints")
         self.LOG_DIR: str = train_cfg.get("log_dir", "./logs")
+
+        # Evaluation configs
+        self.THRESHOLD_METHOD: str = eval_cfg.get("threshold_method", "youden")
+        self.PRO_FPR_LIMIT: float = float(eval_cfg.get("pro_fpr_limit", 0.3))
 
 settings = Settings()
