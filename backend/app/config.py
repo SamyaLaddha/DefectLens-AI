@@ -38,6 +38,12 @@ class Settings:
 
         # Dataset configs
         self.DATASET_NAME: str = dataset_cfg.get("name", "mvtec")
+        self.CATEGORIES: list = dataset_cfg.get("categories", ["bottle", "cable", "screw"])
+        self.CATEGORY_RUNS: dict = dataset_cfg.get("category_runs", {
+            "bottle": "run_2",
+            "cable": "run_3",
+            "screw": "run_2"
+        })
         self.CATEGORY: str = dataset_cfg.get("category", "bottle")
         self.DATASET_PATH: str = os.getenv("MVTEC_DATASET_DIR", dataset_cfg.get("dataset_path", "./data/mvtec"))
         self.IMAGE_SIZE: int = int(dataset_cfg.get("image_size", 256))
@@ -57,6 +63,7 @@ class Settings:
         self.PATIENCE: int = int(train_cfg.get("patience", 10))
         self.DEVICE: str = train_cfg.get("device", "auto")
         self.RUN_NAME: str = train_cfg.get("run_name", "run_1")
+        self.REQUIRE_ALL_CATEGORIES: bool = bool(train_cfg.get("require_all_categories", False))
 
         # Paths
         self.CHECKPOINT_DIR: str = train_cfg.get("checkpoint_dir", "./checkpoints")

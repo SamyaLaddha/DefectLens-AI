@@ -68,15 +68,31 @@ export async function healthCheck() {
 }
 
 /**
- * Transmits a single image file for anomaly prediction.
+ * Inquires active categories available for inspection from the backend.
  */
-export async function predictImage(file) {
-  const url = `${getBaseUrl()}/api/predict`;
-  
+export async function getCategories() {
+  const url = `${getBaseUrl()}/api/categories`;
+  const response = await fetchWithTimeout(url, { method: "GET" });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Failed to fetch categories: HTTP ${response.status}`);
+  }
+  return await response.json();
+}
+
+/**
+ * Transmits a single image file for anomaly prediction on the specified category.
+ */
+export async function predictImage(file, category) {
+  if (!category) {
+    throw new Error("No category specified for prediction.");
+  }
   if (!file) {
     throw new Error("No image file selected for prediction.");
   }
 
+  const url = `${getBaseUrl()}/api/predict?category=${encodeURIComponent(category)}`;
+  
   const formData = new FormData();
   formData.append("file", file);
 

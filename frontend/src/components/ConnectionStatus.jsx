@@ -1,19 +1,23 @@
 import React from "react";
 
-function ConnectionStatus({ status, device, category, threshold, message }) {
+function ConnectionStatus({ status, device, category, threshold, loadedCategories = [], message }) {
   let statusColor = "var(--color-text-muted)";
   let statusText = "Connecting...";
 
   if (status === "healthy") {
     statusColor = "var(--color-status-success)";
-    statusText = "Online - Model Ready";
+    statusText = "Online - Models Ready";
   } else if (status === "degraded") {
     statusColor = "var(--color-status-anomaly)";
-    statusText = "Online - Model Missing";
+    statusText = "Online - Models Missing";
   } else if (status === "error") {
     statusColor = "var(--color-status-error)";
     statusText = "Offline - Server Unreachable";
   }
+
+  const categoryDisplay = loadedCategories.length > 0
+    ? loadedCategories.join(", ")
+    : category;
 
   return (
     <div style={{
@@ -41,10 +45,9 @@ function ConnectionStatus({ status, device, category, threshold, message }) {
       </div>
 
       {status === "healthy" && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", fontSize: "14px", color: "var(--color-text-secondary)" }}>
-          <div><strong>Category:</strong> {category}</div>
-          <div><strong>Threshold:</strong> {threshold.toFixed(4)}</div>
-          <div><strong>Device:</strong> {device.toUpperCase()}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "14px", color: "var(--color-text-secondary)" }}>
+          <div><strong>Active Models:</strong> {categoryDisplay}</div>
+          <div><strong>Execution Device:</strong> {device.toUpperCase()}</div>
         </div>
       )}
 

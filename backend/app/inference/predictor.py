@@ -24,9 +24,8 @@ class STFPMPredictor:
     STFPM predictor class executing single-image anomaly classification.
     """
     def __init__(self, category: str = None, run_name: str = None):
-        # Fall back to configurations if parameters are omitted
         self.category = category or settings.CATEGORY
-        self.run_name = run_name or settings.RUN_NAME
+        self.run_name = run_name or getattr(settings, "CATEGORY_RUNS", {}).get(self.category, settings.RUN_NAME)
 
         # Resolve checkpoint paths
         checkpoint_dir = os.path.join(settings.CHECKPOINT_DIR, self.category, self.run_name)

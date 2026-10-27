@@ -1,6 +1,11 @@
 # DefectLens AI Training Configurations
 dataset:
   name: "mvtec"
+  categories: ["bottle", "cable", "screw"]
+  category_runs:
+    bottle: "run_2"
+    cable: "run_3"
+    screw: "run_2"
   category: "bottle"
   dataset_path: "./data/mvtec"
   image_size: 256
@@ -22,6 +27,7 @@ training:
   run_name: "run_1"
   checkpoint_dir: "./checkpoints"
   log_dir: "./logs"
+  require_all_categories: false
 
 evaluation:
   threshold_method: "youden"

@@ -3,6 +3,7 @@ import './styles/tokens.css';
 
 import { healthCheck, predictImage } from './api/client';
 import ConnectionStatus from './components/ConnectionStatus';
+import CategorySelector from './components/CategorySelector';
 import ImageUploader from './components/ImageUploader';
 import PredictionResult from './components/PredictionResult';
 
@@ -11,8 +12,10 @@ function App() {
   const [device, setDevice] = useState('none');
   const [category, setCategory] = useState('none');
   const [threshold, setThreshold] = useState(0.0);
+  const [loadedCategories, setLoadedCategories] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
   const [anomalyMap, setAnomalyMap] = useState(null);
@@ -26,6 +29,7 @@ function App() {
       setDevice(data.device);
       setCategory(data.category);
       setThreshold(data.threshold);
+      setLoadedCategories(data.loaded_categories || []);
       if (data.status === 'error') {
         setErrorMessage(data.message);
       }
@@ -40,7 +44,7 @@ function App() {
     setAnomalyMap(null);
 
     try {
-      const result = await predictImage(file);
+      const result = await predictImage(file, selectedCategory);
       setPredictionResult({
         is_anomaly: result.is_anomaly,
         anomaly_score: result.anomaly_score,
@@ -92,7 +96,14 @@ function App() {
         device={device}
         category={category}
         threshold={threshold}
+        loadedCategories={loadedCategories}
         message={errorMessage}
+      />
+
+      <CategorySelector
+        selectedCategory={selectedCategory}
+        onCategoryChanged={setSelectedCategory}
+        systemStatus={systemStatus}
       />
 
       <ImageUploader 

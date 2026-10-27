@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { healthCheck, predictImage } from "./client.js";
+import { healthCheck, getCategories, predictImage } from "./client.js";
 
 describe("DefectLens API Client Tests", () => {
   beforeEach(() => {
@@ -17,7 +17,8 @@ describe("DefectLens API Client Tests", () => {
       status: "healthy",
       device: "cpu",
       category: "bottle",
-      threshold: 0.5,
+      threshold: 0.1182,
+      loaded_categories: ["bottle", "cable", "screw"],
       model_loaded: true
     };
 
@@ -41,6 +42,7 @@ describe("DefectLens API Client Tests", () => {
       device: "none",
       category: "none",
       threshold: 0.0,
+      loaded_categories: [],
       model_loaded: false
     };
 
@@ -53,6 +55,7 @@ describe("DefectLens API Client Tests", () => {
     const result = await healthCheck();
     expect(result.status).toBe("degraded");
     expect(result.model_loaded).toBe(false);
+    expect(result.loaded_categories).toEqual([]);
   });
 
   it("should handle unreachable server health responses", async () => {
@@ -63,13 +66,38 @@ describe("DefectLens API Client Tests", () => {
     expect(result.message).toContain("Network connection error");
   });
 
-  it("should execute image prediction successfully", async () => {
+  it("should successfully fetch active categories", async () => {
+    const mockCategories = ["bottle", "cable", "screw"];
+
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => mockCategories
+    });
+
+    const result = await getCategories();
+    expect(global.fetch).toHaveBeenCalledWith(
+      "http://127.0.0.1:8000/api/categories",
+      expect.any(Object)
+    );
+    expect(result).toEqual(mockCategories);
+  });
+
+  it("should fail prediction when category is omitted", async () => {
+    const mockFile = new File(["dummy bytes"], "test.png", { type: "image/png" });
+    await expect(predictImage(mockFile, "")).rejects.toThrow(
+      "No category specified for prediction."
+    );
+  });
+
+  it("should execute image prediction with category query param", async () => {
     const mockPrediction = {
-      is_anomaly: 0,
-      anomaly_score: 0.35,
+      is_anomaly: 1,
+      anomaly_score: 0.88,
       anomaly_map: [[0.1, 0.2]],
-      threshold: 0.5,
-      inference_time: 0.03
+      threshold: 0.0625,
+      inference_time: 0.04,
+      category: "screw"
     };
 
     global.fetch.mockResolvedValueOnce({
@@ -79,10 +107,10 @@ describe("DefectLens API Client Tests", () => {
     });
 
     const mockFile = new File(["dummy bytes"], "test.png", { type: "image/png" });
-    const result = await predictImage(mockFile);
+    const result = await predictImage(mockFile, "screw");
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "http://127.0.0.1:8000/api/predict",
+      "http://127.0.0.1:8000/api/predict?category=screw",
       expect.objectContaining({
         method: "POST",
         body: expect.any(FormData)
@@ -93,7 +121,7 @@ describe("DefectLens API Client Tests", () => {
 
   it("should catch degraded service prediction error (503)", async () => {
     const mockErrResponse = {
-      message: "Model checkpoint is not loaded. Ensure checkpoints are available."
+      message: "Model registry is not initialized or no models are loaded."
     };
 
     global.fetch.mockResolvedValueOnce({
@@ -104,8 +132,8 @@ describe("DefectLens API Client Tests", () => {
 
     const mockFile = new File(["dummy bytes"], "test.png", { type: "image/png" });
     
-    await expect(predictImage(mockFile)).rejects.toThrow(
-      "Model checkpoint is not loaded"
+    await expect(predictImage(mockFile, "bottle")).rejects.toThrow(
+      "Model registry is not initialized"
     );
   });
 
@@ -116,6 +144,6 @@ describe("DefectLens API Client Tests", () => {
     global.fetch.mockRejectedValueOnce(abortError);
 
     const mockFile = new File(["dummy bytes"], "test.png", { type: "image/png" });
-    await expect(predictImage(mockFile)).rejects.toThrow("Request timed out");
+    await expect(predictImage(mockFile, "bottle")).rejects.toThrow("Request timed out");
   });
 });
