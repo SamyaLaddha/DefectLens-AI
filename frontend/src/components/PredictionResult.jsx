@@ -1,6 +1,7 @@
 import React from "react";
+import HeatmapViewer from "./HeatmapViewer";
 
-function PredictionResult({ result }) {
+function PredictionResult({ result, previewUrl, anomalyMap }) {
   if (!result) return null;
 
   const { is_anomaly, anomaly_score, threshold, inference_time } = result;
@@ -61,6 +62,17 @@ function PredictionResult({ result }) {
           </div>
         </div>
       </div>
+
+      {/* Heatmap & Defect Localization Visualization */}
+      {previewUrl && anomalyMap && (
+        <HeatmapViewer
+          imageSrc={previewUrl}
+          anomalyMap={anomalyMap}
+          threshold={threshold}
+          anomalyScore={anomaly_score}
+          isAnomaly={isAnomaly}
+        />
+      )}
     </div>
   );
 }

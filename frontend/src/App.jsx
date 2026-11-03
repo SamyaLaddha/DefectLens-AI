@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles/tokens.css';
 
 import { healthCheck, predictImage } from './api/client';
+import { PredictionCoordinator } from './utils/predictionCoordinator';
 import ConnectionStatus from './components/ConnectionStatus';
 import CategorySelector from './components/CategorySelector';
 import ImageUploader from './components/ImageUploader';
@@ -16,10 +17,43 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
   const [anomalyMap, setAnomalyMap] = useState(null);
   const [predictionError, setPredictionError] = useState('');
+
+  // Request identity coordinator to guard against asynchronous race conditions
+  const coordinatorRef = useRef(null);
+  if (!coordinatorRef.current) {
+    coordinatorRef.current = new PredictionCoordinator({
+      predictFn: predictImage,
+      onStart: ({ previewUrl: newUrl }) => {
+        setIsPredicting(true);
+        setPredictionError('');
+        setPredictionResult(null);
+        setAnomalyMap(null);
+        setPreviewUrl(newUrl);
+      },
+      onSuccess: ({ result }) => {
+        setPredictionResult({
+          is_anomaly: result.is_anomaly,
+          anomaly_score: result.anomaly_score,
+          threshold: result.threshold,
+          inference_time: result.inference_time
+        });
+        setAnomalyMap(result.anomaly_map);
+      },
+      onError: ({ error }) => {
+        setPredictionError(error.message);
+        setPredictionResult(null);
+        setAnomalyMap(null);
+      },
+      onSettled: () => {
+        setIsPredicting(false);
+      }
+    });
+  }
 
   // Run health check exactly once on application mount
   useEffect(() => {
@@ -37,27 +71,15 @@ function App() {
     checkHealth();
   }, []);
 
-  const handleFileSelected = async (file) => {
-    setIsPredicting(true);
-    setPredictionError('');
-    setPredictionResult(null);
-    setAnomalyMap(null);
+  // Invalidate any in-flight requests and clean up object URLs on component unmount
+  useEffect(() => {
+    return () => {
+      coordinatorRef.current?.cleanup();
+    };
+}, []);
 
-    try {
-      const result = await predictImage(file, selectedCategory);
-      setPredictionResult({
-        is_anomaly: result.is_anomaly,
-        anomaly_score: result.anomaly_score,
-        threshold: result.threshold,
-        inference_time: result.inference_time
-      });
-      // Store and preserve raw anomaly map list in state
-      setAnomalyMap(result.anomaly_map);
-    } catch (err) {
-      setPredictionError(err.message);
-    } finally {
-      setIsPredicting(false);
-    }
+  const handleFileSelected = (file) => {
+    coordinatorRef.current.requestPrediction(file, selectedCategory);
   };
 
   return (
@@ -72,8 +94,8 @@ function App() {
       padding: '40px 20px',
       boxSizing: 'border-box'
     }}>
-      <h1 style={{ 
-        fontFamily: 'var(--font-heading)', 
+      <h1 style={{
+        fontFamily: 'var(--font-heading)',
         color: 'var(--color-accent)',
         fontSize: '36px',
         margin: '0 0 10px 0',
@@ -81,8 +103,8 @@ function App() {
       }}>
         DefectLens AI
       </h1>
-      
-      <p style={{ 
+
+      <p style={{
         color: 'var(--color-text-secondary)',
         margin: '0 0 30px 0',
         fontSize: '16px',
@@ -91,7 +113,7 @@ function App() {
         Real-Time Industrial Visual Anomaly Detection Dashboard
       </p>
 
-      <ConnectionStatus 
+      <ConnectionStatus
         status={systemStatus}
         device={device}
         category={category}
@@ -106,7 +128,7 @@ function App() {
         systemStatus={systemStatus}
       />
 
-      <ImageUploader 
+      <ImageUploader
         status={systemStatus}
         isPredicting={isPredicting}
         onFileSelected={handleFileSelected}
@@ -130,7 +152,11 @@ function App() {
         </div>
       )}
 
-      <PredictionResult result={predictionResult} />
+      <PredictionResult
+        result={predictionResult}
+        previewUrl={previewUrl}
+        anomalyMap={anomalyMap}
+      />
     </div>
   );
 }
