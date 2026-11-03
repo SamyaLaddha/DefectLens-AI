@@ -1,46 +1,48 @@
 :root {
- /* Color: base */
- --color-bg: #0f1115;
- --color-surface: #171a21;
- --color-surface-alt: #1f232c;
- --color-border: #2a2f3a;
+ /* Color: base — warm paper + ink */
+ --color-bg: #f1ece1;
+ --color-surface: #faf7f0;
+ --color-surface-alt: #e7e0d0;
+ --color-border: #c9bfa8;
+ --color-ink: #1b1a17;
 
  /* Color: text */
- --color-text-primary: #e8eaed;
- --color-text-secondary: #9aa0ac;
- --color-text-muted: #6b7280;
+ --color-text-primary: #1b1a17;
+ --color-text-secondary: #55514a;
+ --color-text-muted: #7d7766;
 
- /* Color: brand/accent */
- --color-accent: #2dd4bf;
- --color-accent-hover: #14b8a6;
+ /* Color: brand/accent — signal orange (used as a fill, not as text) */
+ --color-accent: #ff5a1f;
+ --color-accent-hover: #e24a12;
 
  /* Color: status */
- --color-status-normal: #2dd4bf;
- --color-status-anomaly: #f59e0b;
- --color-status-error: #ef4444;
- --color-status-success: #22c55e;
+ --color-status-normal: #2e6a3e;
+ --color-status-anomaly: #d9480f;
+ --color-status-error: #b42318;
+ --color-status-success: #2e6a3e;
 
- /* Color: heatmap overlay (referenced in canvas/svg drawing code too, never hardcoded there either) */
- --color-heatmap-low: #1e3a8a;
- --color-heatmap-high: #f59e0b;
+ /* Color: heatmap overlay */
+ --color-heatmap-low: #2b2a26;
+ --color-heatmap-high: #ff5a1f;
 
  /* Color: text on accent/bright backgrounds */
- --color-text-on-accent: #000000;
- --color-text-on-bright: #000000;
+ --color-text-on-accent: #1b1a17;
+ --color-text-on-bright: #1b1a17;
 
  /* Typography */
- --font-heading: 'Space Grotesk', sans-serif;
- --font-body: 'Inter', sans-serif;
- --font-mono: 'JetBrains Mono', monospace;
+ --font-display: 'Instrument Serif', Georgia, serif;
+ --font-heading: 'Instrument Sans', system-ui, sans-serif;
+ --font-body: 'Instrument Sans', system-ui, sans-serif;
+ --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
- /* Radius */
- --radius-sm: 4px;
- --radius-md: 8px;
- --radius-lg: 16px;
+ /* Radius — sharp, like a spec sheet */
+ --radius-sm: 0px;
+ --radius-md: 2px;
+ --radius-lg: 2px;
 
- /* Shadow */
- --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
- --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+ /* Shadow — hard offset, like a stamped tag */
+ --shadow-sm: 2px 2px 0 var(--color-ink);
+ --shadow-md: 4px 4px 0 var(--color-ink);
 
  /* Transition */
  --transition-fast: 120ms ease;
