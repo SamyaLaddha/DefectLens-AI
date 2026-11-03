@@ -66,8 +66,20 @@ class Settings:
         self.REQUIRE_ALL_CATEGORIES: bool = bool(train_cfg.get("require_all_categories", False))
 
         # Paths
-        self.CHECKPOINT_DIR: str = train_cfg.get("checkpoint_dir", "./checkpoints")
-        self.LOG_DIR: str = train_cfg.get("log_dir", "./logs")
+        backend_dir = os.path.dirname(current_dir)
+        raw_checkpoint_dir = train_cfg.get("checkpoint_dir", "./checkpoints")
+        if not os.path.exists(raw_checkpoint_dir):
+            candidate = os.path.join(backend_dir, os.path.basename(raw_checkpoint_dir))
+            if os.path.exists(candidate):
+                raw_checkpoint_dir = candidate
+        self.CHECKPOINT_DIR: str = raw_checkpoint_dir
+
+        raw_log_dir = train_cfg.get("log_dir", "./logs")
+        if not os.path.exists(raw_log_dir):
+            candidate = os.path.join(backend_dir, os.path.basename(raw_log_dir))
+            if os.path.exists(candidate):
+                raw_log_dir = candidate
+        self.LOG_DIR: str = raw_log_dir
 
         # Evaluation configs
         self.THRESHOLD_METHOD: str = eval_cfg.get("threshold_method", "youden")
