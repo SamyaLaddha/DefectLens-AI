@@ -8,41 +8,41 @@ const VERDICT_CONFIG = {
   ALL_CLEAR: {
     label: "ALL CLEAR",
     color: "var(--color-status-success)",
-    icon: "✅",
-    description: "All views processed successfully — no defects detected."
+    icon: "-",
+    description: "All views processed successfully - no defects detected."
   },
   DEFECT_DETECTED: {
     label: "DEFECT DETECTED",
     color: "var(--color-status-anomaly)",
-    icon: "⚠️",
-    description: "One or more views exceed the anomaly threshold — defect confirmed."
+    icon: "-",
+    description: "One or more views exceed the anomaly threshold - defect confirmed."
   },
   INCOMPLETE: {
-    label: "INCOMPLETE — UNVERIFIED",
+    label: "INCOMPLETE - UNVERIFIED",
     color: "var(--color-status-error)",
-    icon: "⛔",
+    icon: "-",
     description: "One or more views could not be processed. Batch quality cannot be confirmed."
   },
   INCOMPLETE_DEFECT_DETECTED: {
-    label: "INCOMPLETE — DEFECT DETECTED",
+    label: "INCOMPLETE - DEFECT DETECTED",
     color: "var(--color-status-anomaly)",
-    icon: "⚠️",
+    icon: "-",
     description: "Defect confirmed on at least one view. Additional views failed to process."
   }
 };
 
 /**
- * BatchSummary — displays the aggregate batch inspection result.
+ * BatchSummary - displays the aggregate batch inspection result.
  *
  * Props:
- *   category       — string, e.g. "screw"
- *   threshold      — number, category-specific threshold loaded from config
- *   batchStatus    — one of the VERDICT_CONFIG keys
- *   totalSubmitted — integer
- *   totalProcessed — integer
- *   totalNormal    — integer
- *   totalAnomalous — integer
- *   totalFailed    — integer
+ *   category       - string, e.g. "screw"
+ *   threshold      - number, category-specific threshold loaded from config
+ *   batchStatus    - one of the VERDICT_CONFIG keys
+ *   totalSubmitted - integer
+ *   totalProcessed - integer
+ *   totalNormal    - integer
+ *   totalAnomalous - integer
+ *   totalFailed    - integer
  */
 function BatchSummary({
   category,
@@ -57,7 +57,7 @@ function BatchSummary({
   const verdict = VERDICT_CONFIG[batchStatus] || {
     label: batchStatus,
     color: "var(--color-text-secondary)",
-    icon: "❓",
+    icon: "-",
     description: ""
   };
 
@@ -73,11 +73,11 @@ function BatchSummary({
       boxShadow: "var(--shadow-md)"
     }}>
       {/* Overall verdict banner */}
-      <div style={{
-        backgroundColor: verdict.color,
-        color: "#000",
-        fontWeight: "bold",
-        fontSize: "16px",
+       <div style={{
+         backgroundColor: verdict.color,
+         color: "var(--color-text-on-accent)",
+         fontWeight: "bold",
+         fontSize: "16px",
         padding: "10px 16px",
         borderRadius: "var(--radius-sm)",
         textAlign: "center",

@@ -170,7 +170,7 @@ function App() {
     fontWeight: '600',
     cursor: 'pointer',
     backgroundColor: inspectionMode === mode ? 'var(--color-accent)' : 'var(--color-surface-alt)',
-    color: inspectionMode === mode ? '#000' : 'var(--color-text-secondary)',
+    color: inspectionMode === mode ? 'var(--color-text-on-accent)' : 'var(--color-text-secondary)',
     transition: 'var(--transition-base)'
   });
 
@@ -240,7 +240,7 @@ function App() {
           Single Image
         </button>
         <button style={modeButtonStyle('batch')} onClick={() => switchMode('batch')}>
-          Batch Inspection (4–12 images)
+          Batch Inspection (4-12 images)
         </button>
       </div>
 
@@ -302,7 +302,7 @@ function App() {
               fontSize: '14px',
               color: 'var(--color-text-secondary)'
             }}>
-              ⏳ Processing batch — running STFPM feature discrepancy matching on each image…
+              Processing batch - running STFPM feature discrepancy matching on each image...
             </div>
           )}
 

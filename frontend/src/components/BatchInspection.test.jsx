@@ -196,15 +196,33 @@ describe("BatchInspectionView Component", () => {
     expect(html).toContain("0.021");
   });
 
-  it("renders Individual Inspection Results heading", () => {
-    const html = renderToString(
-      <BatchInspectionView results={results} previewUrlMap={previewUrlMap} />
-    );
-    expect(html).toContain("Individual Inspection Results");
-  });
-});
+  it("synchronizes active selection when results array changes to a different batch", () => {
+    const firstBatch = [
+      makeResult({ index: 0, image_id: "batch1-001", filename: "alpha.png", is_anomaly: 0 }),
+      makeResult({ index: 1, image_id: "batch1-002", filename: "beta.png", is_anomaly: 1, anomaly_score: 0.095 })
+    ];
+    const secondBatch = [
+      makeResult({ index: 0, image_id: "batch2-001", filename: "gamma.png", is_anomaly: 0 }),
+      makeResult({ index: 1, image_id: "batch2-002", filename: "delta.png", is_anomaly: 0 })
+    ];
+    const map1 = new Map([
+      ["batch1-001", "blob:http://localhost/alpha"],
+      ["batch1-002", "blob:http://localhost/beta"]
+    ]);
+    const map2 = new Map([
+      ["batch2-001", "blob:http://localhost/gamma"],
+      ["batch2-002", "blob:http://localhost/delta"]
+    ]);
 
-// ── BatchImageUploader stub tests (SSR-safe validation logic only) ────────────
+    const html1 = renderToString(<BatchInspectionView results={firstBatch} previewUrlMap={map1} />);
+    expect(html1).toContain("alpha.png");
+
+    const html2 = renderToString(<BatchInspectionView results={secondBatch} previewUrlMap={map2} />);
+    expect(html2).toContain("gamma.png");
+    expect(html2).not.toContain("alpha.png");
+  });
+
+// BatchImageUploader stub tests (SSR-safe validation logic only)
 
 describe("BatchImageUploader validation logic", () => {
   // These test the pure validation logic without browser event interactions

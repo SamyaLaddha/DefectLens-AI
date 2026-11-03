@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeatmapViewer from "./HeatmapViewer";
 
 /**
@@ -52,16 +52,16 @@ function InspectionCard({ item, previewUrl, isActive, onClick }) {
           justifyContent: "center",
           fontSize: "24px"
         }}>
-          {isError ? "⛔" : "🖼"}
+          {isError ? "X" : "IMG"}
         </div>
       )}
 
       {/* Status badge */}
-      <div style={{
-        backgroundColor: statusColor,
-        color: "#000",
-        fontSize: "10px",
-        fontWeight: "700",
+       <div style={{
+         backgroundColor: statusColor,
+         color: "var(--color-text-on-accent)",
+         fontSize: "10px",
+         fontWeight: "700",
         padding: "3px 6px",
         textAlign: "center",
         fontFamily: "var(--font-heading)"
@@ -96,17 +96,28 @@ function InspectionCard({ item, previewUrl, isActive, onClick }) {
 }
 
 /**
- * BatchInspectionView — master-detail layout for batch inspection results.
+ * BatchInspectionView - master-detail layout for batch inspection results.
  *
  * Left column: grid of InspectionCards for each submitted image.
  * Right panel: full detail view with metrics and HeatmapViewer for the selected image.
  *
  * Props:
- *   results        — array of per-image result objects from the batch API
- *   previewUrlMap  — Map<image_id, blobUrl> for thumbnail and viewer images
+ *   results        - array of per-image result objects from the batch API
+ *   previewUrlMap  - Map<image_id, blobUrl> for thumbnail and viewer images
  */
 function BatchInspectionView({ results, previewUrlMap }) {
-  const [activeId, setActiveId] = useState(results[0]?.image_id ?? null);
+  const [activeId, setActiveId] = useState(null);
+
+  useEffect(() => {
+    if (!Array.isArray(results) || results.length === 0) {
+      setActiveId(null);
+      return;
+    }
+    const currentExists = results.some(r => r && r.image_id === activeId);
+    if (!currentExists) {
+      setActiveId(results[0].image_id);
+    }
+  }, [results]);
 
   const activeItem = results.find(r => r.image_id === activeId) ?? results[0];
   const activePreviewUrl = activeItem ? (previewUrlMap.get(activeItem.image_id) ?? null) : null;
@@ -162,13 +173,13 @@ function BatchInspectionView({ results, previewUrlMap }) {
           {/* Detail header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
             <div style={{ fontFamily: "var(--font-heading)", fontSize: "14px", color: "var(--color-text-primary)" }}>
-              📸 {activeItem.filename}
+              {activeItem.filename}
             </div>
-            <div style={{
-              backgroundColor: labelColor,
-              color: "#000",
-              fontWeight: "700",
-              fontSize: "12px",
+             <div style={{
+               backgroundColor: labelColor,
+               color: "var(--color-text-on-accent)",
+               fontWeight: "700",
+               fontSize: "12px",
               padding: "4px 12px",
               borderRadius: "var(--radius-sm)",
               fontFamily: "var(--font-heading)"
@@ -225,7 +236,7 @@ function BatchInspectionView({ results, previewUrlMap }) {
                 </div>
               </div>
 
-              {/* HeatmapViewer — reused from Module 9 */}
+              {/* HeatmapViewer - reused from Module 9 */}
               {activePreviewUrl && activeItem.anomaly_map && (
                 <HeatmapViewer
                   imageSrc={activePreviewUrl}

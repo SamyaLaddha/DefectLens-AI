@@ -6,16 +6,16 @@ const MAX_BATCH = 12;
 const MAX_FILE_MB = 10;
 
 /**
- * BatchImageUploader — multi-file staging tray for batch inspection.
+ * BatchImageUploader - multi-file staging tray for batch inspection.
  *
  * Manages its own staged file list internally and exposes the finalized
  * list up to the parent only when "Inspect Batch" is triggered.
  *
  * Props:
- *   status       — system connection status string
- *   isBatchMode  — boolean, whether batch upload is active
- *   isBatching   — boolean, true while batch request is in flight
- *   onBatchSubmit(filesWithIds) — called when user submits a valid batch
+ *   status       - system connection status string
+ *   isBatchMode  - boolean, whether batch upload is active
+ *   isBatching   - boolean, true while batch request is in flight
+ *   onBatchSubmit(filesWithIds) - called when user submits a valid batch
  */
 function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
   const fileInputRef = useRef(null);
@@ -107,7 +107,7 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
 
   return (
     <div style={{ width: "100%", maxWidth: "720px", marginBottom: "20px" }}>
-      {/* Drop zone / add trigger — hidden once at max */}
+        {/* Drop zone / add trigger - hidden once at max */}
       {!atMax && (
         <div
           onDragOver={handleDragOver}
@@ -135,19 +135,19 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
             style={{ display: "none" }}
             disabled={isOffline || isBatching}
           />
-          <div style={{ fontSize: stagedItems.length === 0 ? "32px" : "20px", marginBottom: "8px" }}>
-            {isOffline ? "🔌" : isBatching ? "⏳" : "📷"}
-          </div>
-          <p style={{ margin: 0, fontSize: "14px", color: "var(--color-text-secondary)" }}>
-            {isOffline
-              ? "Upload is disabled because the server is offline."
-              : isBatching
-                ? "Batch inspection in progress…"
-                : stagedItems.length === 0
-                  ? `Drag and drop ${MIN_BATCH}–${MAX_BATCH} images here, or click to browse.`
-                  : `+ Add more images (${stagedItems.length}/${MAX_BATCH} staged)`
-            }
-          </p>
+           <div style={{ fontSize: stagedItems.length === 0 ? "32px" : "20px", marginBottom: "8px" }}>
+             {isOffline ? "!" : isBatching ? "..." : "..."}
+           </div>
+           <p style={{ margin: 0, fontSize: "14px", color: "var(--color-text-secondary)" }}>
+             {isOffline
+               ? "Upload is disabled because the server is offline."
+               : isBatching
+                 ? "Batch inspection in progress..."
+                 : stagedItems.length === 0
+                   ? `Drag and drop ${MIN_BATCH}-${MAX_BATCH} images here, or click to browse.`
+                   : `Add more images (${stagedItems.length}/${MAX_BATCH} staged)`
+             }
+           </p>
         </div>
       )}
 
@@ -167,7 +167,7 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
             marginBottom: "12px"
           }}>
             <span style={{ fontFamily: "var(--font-heading)", fontSize: "14px", color: "var(--color-text-secondary)" }}>
-              Staged Images — {validCount} valid / {stagedItems.length} total
+               Staged Images - {validCount} valid / {stagedItems.length} total
             </span>
             <button
               onClick={clearAll}
@@ -214,7 +214,7 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
                     justifyContent: "center",
                     backgroundColor: "var(--color-surface-alt)",
                     fontSize: "20px"
-                  }}>⚠️</div>
+                  }}>!</div>
                 )}
 
                 {/* Filename + size */}
@@ -234,29 +234,29 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
                 </div>
 
                 {/* Remove button */}
-                <button
-                  onClick={() => removeItem(item.id)}
-                  disabled={isBatching}
-                  title="Remove image"
-                  style={{
-                    position: "absolute",
-                    top: "4px",
-                    right: "4px",
-                    background: "rgba(0,0,0,0.65)",
-                    border: "none",
-                    color: "#fff",
-                    borderRadius: "50%",
-                    width: "20px",
-                    height: "20px",
-                    fontSize: "12px",
-                    lineHeight: "20px",
-                    textAlign: "center",
-                    cursor: isBatching ? "not-allowed" : "pointer",
-                    padding: 0
-                  }}
-                >
-                  ✕
-                </button>
+               <button
+                 onClick={() => removeItem(item.id)}
+                 disabled={isBatching}
+                 title="Remove image"
+                 style={{
+                   position: "absolute",
+                   top: "4px",
+                   right: "4px",
+                   background: "var(--color-surface-alt)",
+                   border: "none",
+                   color: "var(--color-text-primary)",
+                   borderRadius: "50%",
+                   width: "20px",
+                   height: "20px",
+                   fontSize: "12px",
+                   lineHeight: "20px",
+                   textAlign: "center",
+                   cursor: isBatching ? "not-allowed" : "pointer",
+                   padding: 0
+                 }}
+               >
+                 X
+               </button>
               </div>
             ))}
           </div>
@@ -283,8 +283,8 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
           style={{
             width: "100%",
             padding: "14px",
-            backgroundColor: canSubmit ? "var(--color-accent)" : "var(--color-surface-alt)",
-            color: canSubmit ? "#000" : "var(--color-text-muted)",
+             backgroundColor: canSubmit ? "var(--color-accent)" : "var(--color-surface-alt)",
+             color: canSubmit ? "var(--color-text-on-accent)" : "var(--color-text-muted)",
             border: "none",
             borderRadius: "var(--radius-md)",
             fontFamily: "var(--font-heading)",
@@ -295,9 +295,9 @@ function BatchImageUploader({ status, isBatching, onBatchSubmit }) {
           }}
         >
           {isBatching
-            ? `⏳ Analyzing ${validCount} Images…`
+            ? `Analyzing ${validCount} Images...`
             : canSubmit
-              ? `🔍 Inspect Batch (${validCount} Images)`
+              ? `Inspect Batch (${validCount} Images)`
               : `Select at least ${MIN_BATCH} valid images to inspect`
           }
         </button>

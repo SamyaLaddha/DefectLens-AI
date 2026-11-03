@@ -24,6 +24,10 @@
  --color-heatmap-low: #1e3a8a;
  --color-heatmap-high: #f59e0b;
 
+ /* Color: text on accent/bright backgrounds */
+ --color-text-on-accent: #000000;
+ --color-text-on-bright: #000000;
+
  /* Typography */
  --font-heading: 'Space Grotesk', sans-serif;
  --font-body: 'Inter', sans-serif;
