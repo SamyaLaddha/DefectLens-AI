@@ -19,22 +19,23 @@ logger = get_logger("backend")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize the ModelRegistry preloading all active category checkpoints
-    try:
-        registry = ModelRegistry()
-        registry.load_models()
-        app.state.model_registry = registry
-        logger.info(f"ModelRegistry loaded with categories: {list(registry.predictors.keys())}")
-    except Exception as e:
-        app.state.model_registry = None
-        logger.error(f"Failed to initialize ModelRegistry during startup: {str(e)}")
-        logger.warning("Application running in degraded mode (inference predictions will return 503).")
+    # Initialize the ModelRegistry and preload all active category checkpoints
+    registry = ModelRegistry()
+    registry.load_models()
+    app.state.model_registry = registry
+
+    logger.info(
+        f"ModelRegistry loaded with categories: "
+        f"{list(registry.predictors.keys())}"
+    )
+
     yield
+
     # Clean up registry and release resources
     if hasattr(app.state, "model_registry") and app.state.model_registry is not None:
         del app.state.model_registry
         logger.info("ModelRegistry resources cleaned up during shutdown lifespan.")
-
+        
 # Initialize the FastAPI app with metadata suitable for a portfolio project
 app = FastAPI(
     title="DefectLens AI API",

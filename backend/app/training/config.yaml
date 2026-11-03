@@ -27,7 +27,7 @@ training:
   run_name: "run_1"
   checkpoint_dir: "./checkpoints"
   log_dir: "./logs"
-  require_all_categories: false
+  require_all_categories: true
 
 evaluation:
   threshold_method: "youden"
