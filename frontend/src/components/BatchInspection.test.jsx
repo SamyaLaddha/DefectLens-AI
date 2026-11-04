@@ -222,14 +222,14 @@ describe("BatchInspectionView Component", () => {
     expect(html2).not.toContain("alpha.png");
   });
 
-// BatchImageUploader stub tests (SSR-safe validation logic only)
+  // BatchImageUploader stub tests (SSR-safe validation logic only)
 
-describe("BatchImageUploader validation logic", () => {
-  // These test the pure validation logic without browser event interactions
-  it("generateImageId produces unique IDs for each staged file (cross-module integration)", async () => {
-    const { generateImageId } = await import("../api/client.js");
-    const ids = new Set(Array.from({ length: 10 }, () => generateImageId()));
-    expect(ids.size).toBe(10);
+  describe("BatchImageUploader validation logic", () => {
+    // These test the pure validation logic without browser event interactions
+    it("generateImageId produces unique IDs for each staged file (cross-module integration)", async () => {
+      const { generateImageId } = await import("../api/client.js");
+      const ids = new Set(Array.from({ length: 10 }, () => generateImageId()));
+      expect(ids.size).toBe(10);
+    });
   });
 });
-

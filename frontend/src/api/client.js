@@ -95,7 +95,7 @@ export function generateImageId() {
   bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
   bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant bits
   const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
-  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
 /**
@@ -157,21 +157,21 @@ export async function predictImage(file, category) {
   }
 
   const url = `${getBaseUrl()}/api/predict?category=${encodeURIComponent(category)}`;
-  
+
   const formData = new FormData();
   formData.append("file", file);
 
   const response = await fetchWithTimeout(url, {
     method: "POST",
     body: formData
-  });
+  }, 60000);
 
   const responseData = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     const defaultMsg = `Server returned status: ${response.status}`;
     const errorMsg = responseData.message || responseData.detail || defaultMsg;
-    
+
     // Create custom error carrying HTTP status details
     const apiError = new Error(errorMsg);
     apiError.status = response.status;
