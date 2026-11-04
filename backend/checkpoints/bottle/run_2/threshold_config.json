@@ -1,0 +1,10 @@
+{
+    "threshold": 0.11823703348636627,
+    "threshold_method": "youden",
+    "image_auroc": 1.0,
+    "pixel_auroc": 0.9847982910783035,
+    "pro_score": 0.95189441779748,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0
+}
