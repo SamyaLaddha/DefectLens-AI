@@ -126,7 +126,7 @@ export async function predictBatch(filesWithIds, category) {
   }
 
   // Use a longer timeout for batch: 30s base + 5s per image above 4
-  const timeoutMs = 30000 + Math.max(0, filesWithIds.length - 4) * 5000;
+  const timeoutMs = 120000 + Math.max(0, filesWithIds.length - 4) * 15000;
   const response = await fetchWithTimeout(url, {
     method: "POST",
     body: formData
