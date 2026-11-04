@@ -44,10 +44,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configure CORS to allow frontend communication
+# Configure CORS to allow the production frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://defect-lens-ai.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
