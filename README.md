@@ -16,17 +16,17 @@ Note: the backend goes to sleep after a period of inactivity, so the first reque
 ## Screenshots
 
 ### Landing Page
-![Landing Page](Landing_Page.png)
+![Landing Page](assets/Landing_Page.png)
 
 ### Category Selector
-![Category Selector](Category_Selector.png)
+![Category Selector](assets/Category_Selector.png)
 
 ### Defect inspection with heatmap and overlay
-![Defect inspection with heatmap](Defect_inspection_with_heatmap.png)
-![Defect inspection with overlay](Defect_inspection_with_overlay.png)
+![Defect inspection with heatmap](assets/Defect_inspection_with_heatmap.png)
+![Defect inspection with overlay](assets/Defect_inspection_with_overlay.png)
 
 ### Batch inspection result
-![Batch inspection result](Batch_inspection_result.png)
+![Batch inspection result](assets/Batch_inspection_result.png)
 
 ## Supported Categories
 

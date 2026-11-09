@@ -59,4 +59,7 @@ Thumbs.db
 /data/
 
 # Generated screenshots
-/docs/screenshots/*.png
+/assets/
+
+# Documentation files
+/docs/
